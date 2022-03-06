@@ -42,7 +42,9 @@ bubblebot = BotProcess()
     )
 async def launch_bubblebot(ctx: interactions.CommandContext):
     subprocess.Popen(["python", 'bots/DiscordBot/bot.py'], preexec_fn=os.setsid)
-    bubblebot.set_pid(subprocess.Popen(["python", 'bots/DiscordBot/bot.py'], preexec_fn=os.setsid).pid)
+    bubblebot_pid = subprocess.Popen(["python", 'bots/DiscordBot/bot.py'], preexec_fn=os.setsid).pid
+    print(f"Starting BubbleBot at pid: {bubblebot_pid}")
+    bubblebot.set_pid(bubblebot_pid)
     await ctx.send("Launching BubbleBot...")
 
 

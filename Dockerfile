@@ -1,12 +1,18 @@
-# syntax=docker/dockerfile:1
 FROM python:3.10-slim
 
-COPY interactions_bot.py /app
-# COPY requirements.txt /app
+# Creating Application Source Code Directory
+RUN mkdir -p /usr/src/app
 
-WORKDIR ~/code/flex-bot
+# Setting Home Directory for containers
+WORKDIR /usr/src/app
 
-RUN python -m pip freeze > requirements.txt
-# RUN python -m pip install -r requirements.txt
+# Installing python dependencies
+COPY requirements.txt /usr/src/app/
+# COPY tkn.py /usr/src/app/
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "interactions_bot.py"]
+# Copying src code to Container
+COPY . /usr/src/app
+
+
+CMD ["python", "app/bot.py"]
