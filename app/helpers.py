@@ -38,5 +38,3 @@ def stop_bubblebot() -> str:
     except exceptions.HTTPError as e:
         print(e)
         return "No bots named bubblebot..."
-
-]
