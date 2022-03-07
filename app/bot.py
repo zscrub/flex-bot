@@ -1,7 +1,13 @@
 import os
 
 from discord.ext import commands
-from helpers import hello_function, kanye_quote, launch_bubblebot
+
+from helpers import (
+        hello_function, 
+        kanye_quote, 
+        launch_bubblebot, 
+        stop_bubblebot
+    )
 
 
 client = commands.Bot(command_prefix="!")

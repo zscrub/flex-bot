@@ -1,51 +1,51 @@
 import os
-import json
-import signal
-import requests
-import subprocess
 import interactions
+
+from helpers import (
+                hello_function, 
+                kanye_quote, 
+                launch_bubblebot, 
+                stop_bubblebot
+        )
 
 tkn = os.getenv("PYTHON_DISCORD_TOKEN")
 bot = interactions.Client(token=tkn)
+
 
 @bot.command(
         name="hello",
         description="Welcoming command"
     )
-async def hello_function(ctx: interactions.CommandContext):
-    insult = requests.get("https://evilinsult.com/generate_insult.php?lang=en&amp;type=json")
-    insult = insult.text
-    await ctx.send(str(insult))
+async def hello_fn(ctx: interactions.CommandContext):
+    insult = hello_function()
+    await ctx.send(insult)
+
 
 @bot.command(
         name="kanye",
         description="help function for the bot, returns bot description"
     )
-async def kanye_quote(ctx: interactions.CommandContext):
-    url = "http://api.kanye.rest?"
-    kanye = requests.get(url).json()
-    kanye = kanye["quote"]
-    print(f"Kanye quote: {kanye}")
+async def kanye_fn(ctx: interactions.CommandContext):
+    kanye = knaye_quote()
     await ctx.send(kanye)
-
-
-class BotProcess:
-    process_id = None
-    def set_pid(self, process_id):
-        self.process_id = process_id
-
-bubblebot = BotProcess()
+ 
 
 @bot.command(
-        name="bubblebot",
+        name="bubblebot_run",
         description="Launches BubbleBot"
     )
-async def launch_bubblebot(ctx: interactions.CommandContext):
-    subprocess.Popen(["python", 'bots/DiscordBot/bot.py'], preexec_fn=os.setsid)
-    bubblebot_pid = subprocess.Popen(["python", 'bots/DiscordBot/bot.py'], preexec_fn=os.setsid).pid
-    print(f"Starting BubbleBot at pid: {bubblebot_pid}")
-    bubblebot.set_pid(bubblebot_pid)
-    await ctx.send("Launching BubbleBot...")
+async def launch_bubblebot_fn(ctx: interactions.CommandContext):
+    output = launch_bubblebot()
+    await ctx.send(output)
+
+
+@bot.command(
+        name="bubblebot_kill",
+        description="Kills BubbleBot"
+    )
+async def stop_bubblebot_fn(ctx: interactions.CommandContext):
+    output = stop_bubblebot()
+    await ctx.send(output)
 
 
 @bot.event
@@ -54,8 +54,5 @@ async def on_ready():
     print('------')
 
 if __name__=="__main__":
-    try:
-        bot.start()
-    except KeyboardInterrupt:
-        os.killpg(os.getpgid(bubblebot.process_id), signal.SIGTERM)
-        print("Killing bot subprocesses...")
+    bot.start()
+

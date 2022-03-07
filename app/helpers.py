@@ -2,16 +2,18 @@ import docker
 import requests
 import subprocess
 
+from requests import exceptions
+
 docker_ = docker.from_env()
 
-def hello_function():
+def hello_function() -> str:
     r = requests.get("https://evilinsult.com/generate_insult.php?lang=en&amp;type=json")
     insult = str(r.text)
     print(f"{r}\n{insult}")
     return insult
 
 
-def kanye_quote():
+def kanye_quote() -> str:
     url = "http://api.kanye.rest?"
     r = requests.get(url)
     kanye = r.json()
@@ -20,12 +22,21 @@ def kanye_quote():
     return kanye
 
 
-# for now, everything as seperate commands, implement automated git pull on start
-# might need to rebuild docker image instead of docker start
-def launch_bubblebot():
-    docker_.containers.start("bubblebot", detach=True)
-    return "Starting BubbleBot..."
+def launch_bubblebot() -> str:
+    try:
+        docker_.containers.run("bubblebot:0.2", name="bubblebot", detach=True)
+        return "Starting BubbleBot..."
+    except exceptions.HTTPError as e:
+        print(e)
+        return "Container bubblebot already running"
 
-def stop_bubblebot():
-    docker_.containers.stop("bubblebot", detach=True)
-    return "Stopping BubbleBot..."
+
+def stop_bubblebot() -> str:
+    try:
+        docker_.containers.get("bubblebot").remove(force=True)
+        return "Stopping BubbleBot..."
+    except exceptions.HTTPError as e:
+        print(e)
+        return "No containers named bubblebot"
+
+]
