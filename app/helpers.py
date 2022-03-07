@@ -28,7 +28,7 @@ def launch_bubblebot() -> str:
         return "Starting BubbleBot..."
     except exceptions.HTTPError as e:
         print(e)
-        return "Container bubblebot already running"
+        return "BubbleBot already running!"
 
 
 def stop_bubblebot() -> str:
@@ -37,6 +37,6 @@ def stop_bubblebot() -> str:
         return "Stopping BubbleBot..."
     except exceptions.HTTPError as e:
         print(e)
-        return "No containers named bubblebot"
+        return "No bots named bubblebot..."
 
 ]
